@@ -259,8 +259,8 @@ contract StakingPoolv2 is
         tokenLevel
       );
 
-      uint256 tmpDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-      stake.stakedDuration = tmpDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : tmpDuration;
+      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+      stake.stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
 
       klayeToken.mint(address(this), UNSTAKE_KLAYE_AMOUNT);
       klayeToken.burn(address(this), UNSTAKE_KLAYE_AMOUNT);
@@ -470,8 +470,8 @@ contract StakingPoolv2 is
 
       Stake memory stake = marinePool[tokenId];
       if(stake.startTime == 0) return true;
-      uint256 tmpDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-      uint256 stakedDuration = tmpDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : tmpDuration;
+      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+      uint256 stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
       return levelEpoch.maxRewardDuration > stakedDuration;
     } else {
       return true;
@@ -501,8 +501,8 @@ contract StakingPoolv2 is
       if (levelEpoch.maxRewardDuration <= claimedDuration) {
         owed = 0;
       } else {
-        uint256 tmpStakedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-        uint256 leftDuration = tmpStakedDuration > levelEpoch.maxRewardDuration ? tmpStakedDuration : levelEpoch.maxRewardDuration - tmpStakedDuration;
+        uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+        uint256 leftDuration = passedDuration > levelEpoch.maxRewardDuration ? passedDuration : levelEpoch.maxRewardDuration - passedDuration;
         if(leftDuration > levelEpoch.maxRewardDuration) leftDuration = levelEpoch.maxRewardDuration;
         uint256 passedTime = block.timestamp - stake.lastClaimTime;
         uint256 rewardDuration = leftDuration > passedTime
