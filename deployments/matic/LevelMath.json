@@ -1,0 +1,129 @@
+{
+  "address": "0x8Ab109589A2f378e89b2b46f599Fda9a58F9B2fA",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "maxLevel",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_LEVEL",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "level",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLevelEpoch",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "oresToken",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "coolDownTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "klayeToSkip",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "klayePerDay",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxRewardDuration",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ILevelMath.LevelEpoch",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x83718a2e742aaf0dcae8590bcf7f72b2bc5bc67b42dabede3bee36479a5df46e",
+  "receipt": {
+    "to": null,
+    "from": "0xD98bfa55c0491f58c6802e69CAC9a9F72c47B1CE",
+    "contractAddress": "0x8Ab109589A2f378e89b2b46f599Fda9a58F9B2fA",
+    "transactionIndex": 197,
+    "gasUsed": "223615",
+    "logsBloom": "0x00000000000000000000000400000000000000000000000000080000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000000100000000000000000000000000004002000000000000000000000000000080000000000000000000080000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100000000000000000000002000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0xa23171bd4a182da52e81702195b477f9b8184549b07a644c6d9eb90848fc1ba1",
+    "transactionHash": "0x83718a2e742aaf0dcae8590bcf7f72b2bc5bc67b42dabede3bee36479a5df46e",
+    "logs": [
+      {
+        "transactionIndex": 197,
+        "blockNumber": 27277542,
+        "transactionHash": "0x83718a2e742aaf0dcae8590bcf7f72b2bc5bc67b42dabede3bee36479a5df46e",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000d98bfa55c0491f58c6802e69cac9a9f72c47b1ce",
+          "0x000000000000000000000000ec20607aa654d823dd01beb8780a44863c57ed07"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000017e9a0ecad3f43000000000000000000000000000000000000000000000000516cb59617a383a00000000000000000000000000000000000000000000001dc0d92ab7fe8c0aa0f0000000000000000000000000000000000000000000000005154cbf52af6445d0000000000000000000000000000000000000000000001dc0daa9520d56de952",
+        "logIndex": 721,
+        "blockHash": "0xa23171bd4a182da52e81702195b477f9b8184549b07a644c6d9eb90848fc1ba1"
+      }
+    ],
+    "blockNumber": 27277542,
+    "cumulativeGasUsed": "24250916",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    69
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "fb03553b676fe9e8a8f0650bb1f56f7a",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.2+commit.661d1103\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"maxLevel\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"MAX_LEVEL\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"level\",\"type\":\"uint256\"}],\"name\":\"getLevelEpoch\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"oresToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"coolDownTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"klayeToSkip\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"klayePerDay\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxRewardDuration\",\"type\":\"uint256\"}],\"internalType\":\"struct ILevelMath.LevelEpoch\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/libraries/LevelMath.sol\":\"LevelMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/interfaces/ILevelMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT LICENSE\\n\\npragma solidity ^0.8.0;\\n\\ninterface ILevelMath {\\n  struct LevelEpoch {\\n    uint256 oresToken;\\n    uint256 coolDownTime;\\n    uint256 klayeToSkip;\\n    uint256 klayePerDay;\\n    uint256 maxRewardDuration;\\n  }\\n\\n  function getLevelEpoch(uint256 level)\\n    external\\n    view\\n    returns (LevelEpoch memory);\\n}\\n\",\"keccak256\":\"0xb9136603a3f7e03eda0f98a854a5372b12f478fe761c87c93eb24c4f2992e722\",\"license\":\"MIT LICENSE\"},\"contracts/libraries/LevelMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT LICENSE\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../interfaces/ILevelMath.sol\\\";\\n\\ncontract LevelMath is ILevelMath {\\n  uint256 public immutable MAX_LEVEL;\\n\\n  constructor(uint256 maxLevel) {\\n    MAX_LEVEL = maxLevel;\\n  }\\n\\n  function getLevelEpoch(uint256 level)\\n    external\\n    view\\n    override\\n    returns (LevelEpoch memory)\\n  {\\n    require(level <= MAX_LEVEL, \\\"!invalid level\\\");\\n    uint256 oresToken = 1500e18 * level + 500e18;\\n    uint256 coolDownTime = (level + 1) * 1 hours;\\n    uint256 klayeToSkip = 15e16 * level + 2e17;\\n    uint256 klayePerDay = 25e16 * level + 1e18;\\n    uint256 maxRewardDuration;\\n    if (level < 11) {\\n      maxRewardDuration = 5 days;\\n    } else if (level < 31) {\\n      maxRewardDuration = 4 days;\\n    } else if (level < 45) {\\n      maxRewardDuration = 3 days;\\n    } else if (level < 69) {\\n      maxRewardDuration = 2 days;\\n    } else {\\n      maxRewardDuration = 9999 days;\\n    }\\n\\n    return\\n      LevelEpoch(\\n        oresToken,\\n        coolDownTime,\\n        klayeToSkip,\\n        klayePerDay,\\n        maxRewardDuration\\n      );\\n  }\\n}\\n\",\"keccak256\":\"0xb21a6ff8f22ae9b328948cde3f8ecb3aadae36a111f7beb1791daffa0d5d5555\",\"license\":\"MIT LICENSE\"}},\"version\":1}",
+  "bytecode": "0x60a060405234801561001057600080fd5b5060405161038138038061038183398101604081905261002f91610037565b60805261004f565b600060208284031215610048578081fd5b5051919050565b60805161031261006f600039600081816040015260fe01526103126000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063a49062d41461003b578063d7dd9aa814610075575b600080fd5b6100627f000000000000000000000000000000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b610088610083366004610277565b6100ca565b60405161006c9190600060a082019050825182526020830151602083015260408301516040830152606083015160608301526080830151608083015292915050565b6100fc6040518060a0016040528060008152602001600081526020016000815260200160008152602001600081525090565b7f00000000000000000000000000000000000000000000000000000000000000008211156101615760405162461bcd60e51b815260206004820152600e60248201526d085a5b9d985b1a59081b195d995b60921b604482015260640160405180910390fd5b600061017683685150ae84a8cdf000006102a7565b61018990681b1ae4d6e2ef50000061028f565b9050600061019884600161028f565b6101a490610e106102a7565b905060006101ba85670214e8348c4f00006102a7565b6101cc906702c68af0bb14000061028f565b905060006101e2866703782dace9d900006102a7565b6101f490670de0b6b3a764000061028f565b90506000600b87101561020b57506206978061024b565b601f87101561021e57506205460061024b565b602d87101561023157506203f48061024b565b604587101561024457506202a30061024b565b5063337e46805b6040805160a0810182529586526020860194909452928401919091526060830152608082015292915050565b600060208284031215610288578081fd5b5035919050565b600082198211156102a2576102a26102c6565b500190565b60008160001904831182151516156102c1576102c16102c6565b500290565b634e487b7160e01b600052601160045260246000fdfea264697066735822122084388e3c4ad80e95b08ec40c6567ade7183734e9550e2f8356bc4da3cc2107a464736f6c63430008020033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063a49062d41461003b578063d7dd9aa814610075575b600080fd5b6100627f000000000000000000000000000000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b610088610083366004610277565b6100ca565b60405161006c9190600060a082019050825182526020830151602083015260408301516040830152606083015160608301526080830151608083015292915050565b6100fc6040518060a0016040528060008152602001600081526020016000815260200160008152602001600081525090565b7f00000000000000000000000000000000000000000000000000000000000000008211156101615760405162461bcd60e51b815260206004820152600e60248201526d085a5b9d985b1a59081b195d995b60921b604482015260640160405180910390fd5b600061017683685150ae84a8cdf000006102a7565b61018990681b1ae4d6e2ef50000061028f565b9050600061019884600161028f565b6101a490610e106102a7565b905060006101ba85670214e8348c4f00006102a7565b6101cc906702c68af0bb14000061028f565b905060006101e2866703782dace9d900006102a7565b6101f490670de0b6b3a764000061028f565b90506000600b87101561020b57506206978061024b565b601f87101561021e57506205460061024b565b602d87101561023157506203f48061024b565b604587101561024457506202a30061024b565b5063337e46805b6040805160a0810182529586526020860194909452928401919091526060830152608082015292915050565b600060208284031215610288578081fd5b5035919050565b600082198211156102a2576102a26102c6565b500190565b60008160001904831182151516156102c1576102c16102c6565b500290565b634e487b7160e01b600052601160045260246000fdfea264697066735822122084388e3c4ad80e95b08ec40c6567ade7183734e9550e2f8356bc4da3cc2107a464736f6c63430008020033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
