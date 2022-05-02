@@ -144,7 +144,6 @@ contract StakingPoolv2 is
         "You don't own this token"
       );
       uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
-      checkNeedsUpdate(tokenId, tokenLevel);
       require(canStake(tokenId, tokenLevel), "can't stake. upgrade level first");
       mnaNFT.transferFrom(_msgSender(), address(this), tokenId);
 
@@ -168,7 +167,12 @@ contract StakingPoolv2 is
     stake.owner = account;
     stake.startTime = block.timestamp;
     stake.lastClaimTime = block.timestamp;
-    stake.stakedDuration = stake.stakedDuration;
+    if (level == stake.tokenLevel) {
+      stake.stakedDuration = stake.stakedDuration;
+    } else {
+      stake.stakedDuration = 0;
+    }
+      
     stake.value = 0;
     stake.tokenLevel = level;
     emit TokenStaked(tokenId, account, true, stake.stakedDuration, 0);
@@ -261,6 +265,8 @@ contract StakingPoolv2 is
 
       uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
       stake.stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
+      stake.owner = address(0);
+      stake.tokenLevel = tokenLevel;
 
       klayeToken.mint(address(this), UNSTAKE_KLAYE_AMOUNT);
       klayeToken.burn(address(this), UNSTAKE_KLAYE_AMOUNT);
@@ -442,22 +448,6 @@ contract StakingPoolv2 is
   }
 
   /**
-    * Updates if upgraded level outside of contract.
-    */
-  function checkNeedsUpdate(uint256 tokenId, uint256 tokenLevel) internal {
-    if (mnaNFT.isMarine(tokenId)) {
-      if(tokenLevel > 69) tokenLevel = 69;
-      Stake storage stake = marinePool[tokenId];
-      if(stake.tokenLevel < tokenLevel) {
-        stake.tokenLevel = tokenLevel;
-        stake.stakedDuration = 0;
-        stake.startTime = block.timestamp;
-        stake.lastClaimTime = block.timestamp;
-      }
-    }
-  }
-
-  /**
    * Determines whether `tokenId` can be staked or not.
    * Token needs to have remaining accure duration for each level to stake
    */
@@ -467,9 +457,8 @@ contract StakingPoolv2 is
       ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
         tokenLevel
       );
-
       Stake memory stake = marinePool[tokenId];
-      if(stake.startTime == 0) return true;
+      if (tokenLevel > stake.tokenLevel || stake.startTime == 0) return true;
       uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
       uint256 stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
       return levelEpoch.maxRewardDuration > stakedDuration;
