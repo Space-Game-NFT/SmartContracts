@@ -25,7 +25,7 @@ export default task("mint", "Mint a token")
       );
 
       const accountTree = new AccountTree(whitelist);
-      let merkleProof = [];
+      let merkleProof : any[] = [];
       try {
         merkleProof = accountTree.getProof(namedAccounts.deployer);
       } catch (e) {

@@ -1,6 +1,6 @@
 import { task } from "hardhat/config";
 
-const sleep = (delay) =>
+const sleep = (delay: any) =>
   new Promise((resolve) => setTimeout(resolve, delay * 1000));
 
 export default task("update-game-seed", "Update game seed")
