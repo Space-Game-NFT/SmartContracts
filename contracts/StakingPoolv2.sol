@@ -32,6 +32,7 @@ contract StakingPoolv2 is
     uint256 lastClaimTime;
     uint256 startTime;
     uint256 stakedDuration;
+    uint256 tokenLevel;
   }
 
   uint256 private totalRankStaked;
@@ -135,17 +136,20 @@ contract StakingPoolv2 is
   ) external nonReentrant {
     require(tx.origin == _msgSender(), "Only EOA");
     require(account == tx.origin, "account to sender mismatch");
+    uint256 tokenId;
     for (uint256 i = 0; i < tokenIds.length; i++) {
+      tokenId = tokenIds[i];
       require(
-        mnaNFT.ownerOf(tokenIds[i]) == _msgSender(),
+        mnaNFT.ownerOf(tokenId) == _msgSender(),
         "You don't own this token"
       );
-      require(canStake(tokenIds[i]), "can't stake. upgrade level first");
-      mnaNFT.transferFrom(_msgSender(), address(this), tokenIds[i]);
+      uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
+      require(canStake(tokenId, tokenLevel), "can't stake. upgrade level first");
+      mnaNFT.transferFrom(_msgSender(), address(this), tokenId);
 
-      if (mnaNFT.isMarine(tokenIds[i]))
-        _addMarineToMarinePool(account, tokenIds[i]);
-      else _addAlienToAlienPool(account, tokenIds[i]);
+      if (mnaNFT.isMarine(tokenId))
+        _addMarineToMarinePool(account, tokenId, tokenLevel);
+      else _addAlienToAlienPool(account, tokenId, tokenLevel);
     }
   }
 
@@ -154,7 +158,7 @@ contract StakingPoolv2 is
    * @param account the address of the staker
    * @param tokenId the ID of the Marine to add to the MarinePool
    */
-  function _addMarineToMarinePool(address account, uint256 tokenId)
+  function _addMarineToMarinePool(address account, uint256 tokenId, uint256 level)
     internal
     whenNotPaused
   {
@@ -163,8 +167,14 @@ contract StakingPoolv2 is
     stake.owner = account;
     stake.startTime = block.timestamp;
     stake.lastClaimTime = block.timestamp;
-    stake.stakedDuration = stake.stakedDuration;
+    if (level == stake.tokenLevel) {
+      stake.stakedDuration = stake.stakedDuration;
+    } else {
+      stake.stakedDuration = 0;
+    }
+      
     stake.value = 0;
+    stake.tokenLevel = level;
     emit TokenStaked(tokenId, account, true, stake.stakedDuration, 0);
   }
 
@@ -173,7 +183,7 @@ contract StakingPoolv2 is
    * @param account the address of the staker
    * @param tokenId the ID of the Alien to add to the AlienPool
    */
-  function _addAlienToAlienPool(address account, uint256 tokenId) internal {
+  function _addAlienToAlienPool(address account, uint256 tokenId, uint256 level) internal {
     uint8 rank = _rankForAlien(tokenId);
     totalRankStaked += rank; // Portion of earnings ranges from 4 to 1
     alienPoolIndices[tokenId] = alienPool[rank].length; // Store the location of the alien in the AlienPool
@@ -184,7 +194,8 @@ contract StakingPoolv2 is
         value: klayePerRank,
         startTime: block.timestamp,
         lastClaimTime: block.timestamp,
-        stakedDuration: 0
+        stakedDuration: 0,
+        tokenLevel: level
       })
     ); // Add the alien to the AlienPool
     emit TokenStaked(tokenId, account, false, 0, klayePerRank);
@@ -246,10 +257,16 @@ contract StakingPoolv2 is
       );
       owed = owed - UNSTAKE_KLAYE_AMOUNT;
 
-      stake.stakedDuration =
-        block.timestamp -
-        stake.startTime +
-        stake.stakedDuration;
+      uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
+      if(tokenLevel >= 69) tokenLevel = 69;
+      ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
+        tokenLevel
+      );
+
+      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+      stake.stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
+      stake.owner = address(0);
+      stake.tokenLevel = tokenLevel;
 
       klayeToken.mint(address(this), UNSTAKE_KLAYE_AMOUNT);
       klayeToken.burn(address(this), UNSTAKE_KLAYE_AMOUNT);
@@ -302,7 +319,8 @@ contract StakingPoolv2 is
         startTime: stake.startTime,
         value: klayePerRank,
         lastClaimTime: block.timestamp,
-        stakedDuration: 0
+        stakedDuration: 0,
+        tokenLevel: stake.tokenLevel
       }); // reset stake
     }
     emit AlienClaimed(tokenId, unstake, owed);
@@ -336,6 +354,7 @@ contract StakingPoolv2 is
       stake.startTime = block.timestamp;
       stake.lastClaimTime = block.timestamp;
       stake.stakedDuration = 0;
+      stake.tokenLevel++;
     }
   }
 
@@ -432,15 +451,17 @@ contract StakingPoolv2 is
    * Determines whether `tokenId` can be staked or not.
    * Token needs to have remaining accure duration for each level to stake
    */
-  function canStake(uint256 tokenId) public view returns (bool) {
+  function canStake(uint256 tokenId, uint256 tokenLevel) public view returns (bool) {
     if (mnaNFT.isMarine(tokenId)) {
-      uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
+      if(tokenLevel > 69) tokenLevel = 69;
       ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
         tokenLevel
       );
-
       Stake memory stake = marinePool[tokenId];
-      return levelEpoch.maxRewardDuration > stake.stakedDuration;
+      if (tokenLevel > stake.tokenLevel || stake.startTime == 0) return true;
+      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+      uint256 stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
+      return levelEpoch.maxRewardDuration > stakedDuration;
     } else {
       return true;
     }
@@ -469,7 +490,9 @@ contract StakingPoolv2 is
       if (levelEpoch.maxRewardDuration <= claimedDuration) {
         owed = 0;
       } else {
-        uint256 leftDuration = levelEpoch.maxRewardDuration - claimedDuration;
+        uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
+        uint256 leftDuration = passedDuration > levelEpoch.maxRewardDuration ? passedDuration : levelEpoch.maxRewardDuration - passedDuration;
+        if(leftDuration > levelEpoch.maxRewardDuration) leftDuration = levelEpoch.maxRewardDuration;
         uint256 passedTime = block.timestamp - stake.lastClaimTime;
         uint256 rewardDuration = leftDuration > passedTime
           ? passedTime

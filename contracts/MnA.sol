@@ -581,7 +581,7 @@ contract MnA is IMnA, IERC721Receiver, ERC721Enumerable, Ownable, Pausable {
             return t;
         }
         uint256 nextSeed = uint256(
-            keccak256(abi.encode(randomSeedGenerator.random(), seed))
+            keccak256(abi.encode(block.timestamp, seed))
         );
         return generate(tokenId, nextSeed, lw);
     }

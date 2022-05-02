@@ -1,5 +1,4 @@
 import { HardhatUserConfig } from "hardhat/types";
-import { config as dotEnvConfig } from "dotenv";
 import "@nomiclabs/hardhat-waffle";
 import "solidity-coverage";
 import "@nomiclabs/hardhat-etherscan";
@@ -20,8 +19,9 @@ import "./src/tasks/mintTestEgg";
 import "./src/tasks/uploadTraitsV2";
 import "./src/tasks/setActive";
 import "./src/tasks/setStakingPoolv2";
+import * as dotenv from "dotenv";
 
-dotEnvConfig();
+dotenv.config();
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -45,11 +45,22 @@ const config: HardhatUserConfig = {
   networks: {
     rinkeby: {
       url: process.env.RPC_ENDPOINT,
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY !== undefined ? process.env.PRIVATE_KEY : ""],
     },
     matic: {
       url: process.env.MATIC_RPC_ENDPOINT,
-      accounts: [process.env.MATIC_PRIVATE_KEY],
+      accounts: [process.env.MATIC_PRIVATE_KEY !== undefined ? process.env.MATIC_PRIVATE_KEY : ""],
+    },
+    hardhat: {
+      mining: {
+        auto: true
+      },
+      accounts: [
+        {
+          privateKey: process.env.MATIC_PRIVATE_KEY !== undefined ? process.env.MATIC_PRIVATE_KEY : "",
+          balance: "10000000000000000000000"
+        },
+      ],
     },
   },
   etherscan: {
