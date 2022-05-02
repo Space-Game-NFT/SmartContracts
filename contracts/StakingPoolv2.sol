@@ -511,14 +511,7 @@ contract StakingPoolv2 is
       if (levelEpoch.maxRewardDuration <= claimedDuration) {
         owed = 0;
       } else {
-        uint256 passedDuration = block.timestamp -
-          stake.startTime +
-          stake.stakedDuration;
-        uint256 leftDuration = passedDuration > levelEpoch.maxRewardDuration
-          ? passedDuration
-          : levelEpoch.maxRewardDuration - passedDuration;
-        if (leftDuration > levelEpoch.maxRewardDuration)
-          leftDuration = levelEpoch.maxRewardDuration;
+        uint256 leftDuration = levelEpoch.maxRewardDuration - claimedDuration;
         uint256 passedTime = block.timestamp - stake.lastClaimTime;
         uint256 rewardDuration = leftDuration > passedTime
           ? passedTime
