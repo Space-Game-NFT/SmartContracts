@@ -7,3 +7,4 @@ images
 images_bin
 scripts
 deploy
+.DS_Store

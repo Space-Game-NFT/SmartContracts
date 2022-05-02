@@ -1,9 +1,6 @@
-import { BigNumber } from "ethers";
 import { task } from "hardhat/config";
-import whitelist from "../../scripts/constants/whitelist";
-import AccountTree from "../account-tree";
 
-const sleep = (delay) =>
+const sleep = (delay: any) =>
   new Promise((resolve) => setTimeout(resolve, delay * 1000));
 
 export default task("mint-for-airdrop", "Mint for airdrop").setAction(
@@ -26,7 +23,6 @@ export default task("mint-for-airdrop", "Mint for airdrop").setAction(
         gasPrice: "100000000000",
         gasLimit: impactedGasLimit.toString(),
       });
-      // // const tx = await mnAContract.mintForAirdrop();
       console.log("mint tx: ", tx);
       const receipt = await tx.wait(1);
       console.log("mint tx mined: ", receipt.transactionHash);

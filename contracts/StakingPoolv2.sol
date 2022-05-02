@@ -146,7 +146,10 @@ contract StakingPoolv2 is
         "You don't own this token"
       );
       uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
-      require(canStake(tokenId, tokenLevel), "can't stake. upgrade level first");
+      require(
+        canStake(tokenId, tokenLevel),
+        "can't stake. upgrade level first"
+      );
       mnaNFT.transferFrom(_msgSender(), address(this), tokenId);
 
       if (mnaNFT.isMarine(tokenId))
@@ -160,10 +163,11 @@ contract StakingPoolv2 is
    * @param account the address of the staker
    * @param tokenId the ID of the Marine to add to the MarinePool
    */
-  function _addMarineToMarinePool(address account, uint256 tokenId, uint256 level)
-    internal
-    whenNotPaused
-  {
+  function _addMarineToMarinePool(
+    address account,
+    uint256 tokenId,
+    uint256 level
+  ) internal whenNotPaused {
     Stake storage stake = marinePool[tokenId];
     stake.tokenId = tokenId;
     stake.owner = account;
@@ -175,7 +179,7 @@ contract StakingPoolv2 is
     } else {
       stake.stakedDuration = 0;
     }
-      
+
     stake.value = 0;
     tokenLevels[tokenId] = level;
     emit TokenStaked(tokenId, account, true, stake.stakedDuration, 0);
@@ -186,7 +190,11 @@ contract StakingPoolv2 is
    * @param account the address of the staker
    * @param tokenId the ID of the Alien to add to the AlienPool
    */
-  function _addAlienToAlienPool(address account, uint256 tokenId, uint256 level) internal {
+  function _addAlienToAlienPool(
+    address account,
+    uint256 tokenId,
+    uint256 level
+  ) internal {
     uint8 rank = _rankForAlien(tokenId);
     totalRankStaked += rank; // Portion of earnings ranges from 4 to 1
     alienPoolIndices[tokenId] = alienPool[rank].length; // Store the location of the alien in the AlienPool
@@ -264,13 +272,17 @@ contract StakingPoolv2 is
       owed = owed - UNSTAKE_KLAYE_AMOUNT;
 
       uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
-      if(tokenLevel >= 69) tokenLevel = 69;
+      if (tokenLevel >= 69) tokenLevel = 69;
       ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
         tokenLevel
       );
 
-      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-      stake.stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
+      uint256 passedDuration = block.timestamp -
+        stake.startTime +
+        stake.stakedDuration;
+      stake.stakedDuration = passedDuration > levelEpoch.maxRewardDuration
+        ? levelEpoch.maxRewardDuration
+        : passedDuration;
       stake.owner = address(0);
       
       if(tokenLevels[tokenId] != tokenLevel) {
@@ -462,16 +474,24 @@ contract StakingPoolv2 is
    * Determines whether `tokenId` can be staked or not.
    * Token needs to have remaining accure duration for each level to stake
    */
-  function canStake(uint256 tokenId, uint256 tokenLevel) public view returns (bool) {
+  function canStake(uint256 tokenId, uint256 tokenLevel)
+    public
+    view
+    returns (bool)
+  {
     if (mnaNFT.isMarine(tokenId)) {
-      if(tokenLevel > 69) tokenLevel = 69;
+      if (tokenLevel > 69) tokenLevel = 69;
       ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
         tokenLevel
       );
       Stake memory stake = marinePool[tokenId];
       if (tokenLevel > tokenLevels[tokenId] || stake.startTime == 0) return true;
-      uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-      uint256 stakedDuration = passedDuration > levelEpoch.maxRewardDuration ? levelEpoch.maxRewardDuration : passedDuration;
+      uint256 passedDuration = block.timestamp -
+        stake.startTime +
+        stake.stakedDuration;
+      uint256 stakedDuration = passedDuration > levelEpoch.maxRewardDuration
+        ? levelEpoch.maxRewardDuration
+        : passedDuration;
       return levelEpoch.maxRewardDuration > stakedDuration;
     } else {
       return true;
@@ -490,6 +510,7 @@ contract StakingPoolv2 is
     if (mnaNFT.isMarine(tokenId)) {
       Stake memory stake = marinePool[tokenId];
       uint256 tokenLevel = mnaNFT.getTokenLevel(tokenId);
+      if (tokenLevel > 69) tokenLevel = 69;
       ILevelMath.LevelEpoch memory levelEpoch = levelMath.getLevelEpoch(
         tokenLevel
       );
@@ -501,9 +522,7 @@ contract StakingPoolv2 is
       if (levelEpoch.maxRewardDuration <= claimedDuration) {
         owed = 0;
       } else {
-        uint256 passedDuration = block.timestamp - stake.startTime + stake.stakedDuration;
-        uint256 leftDuration = passedDuration > levelEpoch.maxRewardDuration ? passedDuration : levelEpoch.maxRewardDuration - passedDuration;
-        if(leftDuration > levelEpoch.maxRewardDuration) leftDuration = levelEpoch.maxRewardDuration;
+        uint256 leftDuration = levelEpoch.maxRewardDuration - claimedDuration;
         uint256 passedTime = block.timestamp - stake.lastClaimTime;
         uint256 rewardDuration = leftDuration > passedTime
           ? passedTime
