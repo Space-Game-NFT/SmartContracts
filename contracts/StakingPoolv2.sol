@@ -208,7 +208,7 @@ contract StakingPoolv2 is
         stakedDuration: 0
       })
     ); // Add the alien to the AlienPool
-    if(tokenLevels[tokenId] != level) {
+    if (tokenLevels[tokenId] != level) {
       tokenLevels[tokenId] = level;
     }
     emit TokenStaked(tokenId, account, false, 0, klayePerRank);
@@ -251,10 +251,11 @@ contract StakingPoolv2 is
    * @param unstake whether or not to unstake the Marines
    * @return owed - the amount of $KLAYE earned
    */
-  function _claimMarineFromMarinePool(uint256 tokenId, bool unstake, uint256 level)
-    internal
-    returns (uint256 owed)
-  {
+  function _claimMarineFromMarinePool(
+    uint256 tokenId,
+    bool unstake,
+    uint256 level
+  ) internal returns (uint256 owed) {
     Stake storage stake = marinePool[tokenId];
     require(stake.owner == _msgSender(), "Don't own the given token");
     owed = calculateRewards(tokenId);
@@ -284,8 +285,8 @@ contract StakingPoolv2 is
         ? levelEpoch.maxRewardDuration
         : passedDuration;
       stake.owner = address(0);
-      
-      if(tokenLevels[tokenId] != tokenLevel) {
+
+      if (tokenLevels[tokenId] != tokenLevel) {
         tokenLevels[tokenId] = tokenLevel;
       }
 
@@ -306,10 +307,11 @@ contract StakingPoolv2 is
    * @param unstake whether or not to unstake the Alien
    * @return owed - the amount of $KLAYE earned
    */
-  function _claimAlienFromAlienPool(uint256 tokenId, bool unstake, uint256 level)
-    internal
-    returns (uint256 owed)
-  {
+  function _claimAlienFromAlienPool(
+    uint256 tokenId,
+    bool unstake,
+    uint256 level
+  ) internal returns (uint256 owed) {
     require(mnaNFT.ownerOf(tokenId) == address(this), "Doesn't own token");
     uint8 rank = _rankForAlien(tokenId);
     Stake memory stake = alienPool[rank][alienPoolIndices[tokenId]];
@@ -342,7 +344,7 @@ contract StakingPoolv2 is
         lastClaimTime: block.timestamp,
         stakedDuration: 0
       }); // reset stake
-      if(tokenLevels[tokenId] != level) {
+      if (tokenLevels[tokenId] != level) {
         tokenLevels[tokenId] = level;
       }
     }
@@ -485,7 +487,8 @@ contract StakingPoolv2 is
         tokenLevel
       );
       Stake memory stake = marinePool[tokenId];
-      if (tokenLevel > tokenLevels[tokenId] || stake.startTime == 0) return true;
+      if (tokenLevel > tokenLevels[tokenId] || stake.startTime == 0)
+        return true;
       uint256 passedDuration = block.timestamp -
         stake.startTime +
         stake.stakedDuration;
